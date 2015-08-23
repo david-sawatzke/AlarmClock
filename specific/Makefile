@@ -1,6 +1,6 @@
 PROJ_NAME = main
 
-SRCS = ./Src/main.c  ./Src/stm32f0xx_it.c ./Src/system_stm32f0xx.c
+SRCS = ./Src/main.c ./Src/hd44780.c ./Src/stm32f0xx_it.c ./Src/system_stm32f0xx.c 
 
 COMMON = ../common/
 

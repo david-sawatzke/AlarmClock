@@ -1,46 +1,29 @@
 #include "main.h"
 
-
 static GPIO_InitTypeDef  GPIO_InitStruct;
-
-static void SystemClock_Config(void);
-
+static DISP_HandleTypeDef DISP_HandleStruct;
 int main(void)
 {
-  /* This sample code shows how to use GPIO HAL API to toggle LED2 IOs
-    in an infinite loop. */
-
-  /* STM32F0xx HAL library initialization:
-       - Configure the Flash prefetch
-       - Systick timer is configured by default as source of time base, but user 
-         can eventually implement his proper time base source (a general purpose 
-         timer for example or other time source), keeping in mind that Time base 
-         duration should be kept 1ms since PPP_TIMEOUT_VALUEs are defined and 
-         handled in milliseconds basis.
-       - Low Level Initialization
-     */
-  HAL_Init();
-
-  /* Just a Stub for future changes */
-  SystemClock_Config();
-  
-  /* -1- Enable each GPIO Clock (to be able to program the configuration registers) */
-  __GPIOA_CLK_ENABLE();
-  /* -2- Configure IOs in output push-pull mode to drive external LEDs */
-  GPIO_InitStruct.Mode  = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull  = GPIO_PULLUP;
-  GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
-  GPIO_InitStruct.Pin = GPIO_PIN_4;
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-
-  /* -3- Toggle IOs in an infinite loop */
-  while (1){
-    HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_4);
-    /* Insert delay 100 ms */
-    HAL_Delay(1000);
-  }
-}
-
-static void SystemClock_Config(void)
-{
+    HAL_Init();
+    HAL_Delay(500); //To let everything else start
+    __GPIOA_CLK_ENABLE();
+    __GPIOB_CLK_ENABLE();
+    DISP_HandleStruct.D4.Port = GPIOA;
+    DISP_HandleStruct.D4.Pin = GPIO_PIN_5;
+    DISP_HandleStruct.D5.Port = GPIOA;
+    DISP_HandleStruct.D5.Pin = GPIO_PIN_6;
+    DISP_HandleStruct.D6.Port = GPIOA;
+    DISP_HandleStruct.D6.Pin = GPIO_PIN_7;
+    DISP_HandleStruct.D7.Port = GPIOB;
+    DISP_HandleStruct.D7.Pin = GPIO_PIN_1;
+    DISP_HandleStruct.RS.Port = GPIOA;
+    DISP_HandleStruct.RS.Pin = GPIO_PIN_9;
+    DISP_HandleStruct.E.Port = GPIOA;
+    DISP_HandleStruct.E.Pin = GPIO_PIN_10;
+    DISP_Init(&DISP_HandleStruct);
+    DISP_WriteTimeDate(&DISP_HandleStruct,10,11,12,13,14);
+    while(1){
+	HAL_Delay(1000);
+	DISP_WriteTimeDate(&DISP_HandleStruct,HAL_GetTick() /1000 %60,11,12,13,14);
+    }
 }

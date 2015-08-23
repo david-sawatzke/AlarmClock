@@ -2,6 +2,7 @@
 
 static GPIO_InitTypeDef  GPIO_InitStruct;
 static DISP_HandleTypeDef DISP_HandleStruct;
+uint32_t TIME = 0;//Seconds since poweronn
 int main(void)
 {
     HAL_Init();
@@ -23,7 +24,10 @@ int main(void)
     DISP_Init(&DISP_HandleStruct);
     DISP_WriteTimeDate(&DISP_HandleStruct,10,11,12,13,14);
     while(1){
-	HAL_Delay(1000);
-	DISP_WriteTimeDate(&DISP_HandleStruct,HAL_GetTick() /1000 %60,11,12,13,14);
+	if(HAL_GetTick() %1000 == 0){
+	    HAL_Delay(1);
+	    TIME+= 1;
+	    DISP_WriteTimeDate(&DISP_HandleStruct,TIME % 60,TIME /60 %60 ,TIME /3600 %24 ,53 ,84);
+	}
     }
 }
